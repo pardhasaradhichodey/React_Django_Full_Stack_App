@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import TextField from "@mui/material/TextField";
-import FormHelperText from "@mui/material/FormHelperText";
-import FormControl from "@mui/material/FormControl";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { Link } from "react-router-dom";
+// CreateRoomPage.js
+import React, { Component } from 'react';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import { Link } from 'react-router-dom';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
-export default class CreateRoomPage extends Component {
+class CreateRoomPage extends Component {
   defaultVotes = 2;
 
   constructor(props) {
@@ -26,29 +27,25 @@ export default class CreateRoomPage extends Component {
   }
 
   handleVotesChange(e) {
-    this.setState({
-      votesToSkip: e.target.value,
-    });
+    this.setState({ votesToSkip: e.target.value });
   }
 
   handleGuestCanPauseChange(e) {
-    this.setState({
-      guestCanPause: e.target.value === "true" ? true : false,
-    });
+    this.setState({ guestCanPause: e.target.value === 'true' });
   }
 
   handleRoomButtonPressed() {
     const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         votes_to_skip: this.state.votesToSkip,
         guest_can_pause: this.state.guestCanPause,
       }),
     };
-    fetch("/api/create-room", requestOptions)
+    fetch('/api/create-room', requestOptions)
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => this.props.navigate('/room/' + data.code));
   }
 
   render() {
@@ -64,49 +61,22 @@ export default class CreateRoomPage extends Component {
             <FormHelperText>
               <div align="center">Guest Control of Playback State</div>
             </FormHelperText>
-            <RadioGroup
-              row
-              defaultValue="true"
-              onChange={this.handleGuestCanPauseChange}
-            >
-              <FormControlLabel
-                value="true"
-                control={<Radio color="primary" />}
-                label="Play/Pause"
-                labelPlacement="bottom"
-              />
-              <FormControlLabel
-                value="false"
-                control={<Radio color="secondary" />}
-                label="No Control"
-                labelPlacement="bottom"
-              />
+            <RadioGroup row defaultValue="true" onChange={this.handleGuestCanPauseChange}>
+              <FormControlLabel value="true" control={<Radio color="primary" />} label="Play/Pause" labelPlacement="bottom" />
+              <FormControlLabel value="false" control={<Radio color="secondary" />} label="No Control" labelPlacement="bottom" />
             </RadioGroup>
           </FormControl>
         </Grid>
         <Grid item xs={12} align="center">
           <FormControl>
-            <TextField
-              required={true}
-              type="number"
-              onChange={this.handleVotesChange}
-              defaultValue={this.defaultVotes}
-              inputProps={{
-                min: 1,
-                style: { textAlign: "center" },
-              }}
-            />
+            <TextField required={true} type="number" onChange={this.handleVotesChange} defaultValue={this.defaultVotes} inputProps={{ min: 1, style: { textAlign: "center" }}} />
             <FormHelperText>
               <div align="center">Votes Required To Skip Song</div>
             </FormHelperText>
           </FormControl>
         </Grid>
         <Grid item xs={12} align="center">
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={this.handleRoomButtonPressed}
-          >
+          <Button color="primary" variant="contained" onClick={this.handleRoomButtonPressed}>
             Create A Room
           </Button>
         </Grid>
@@ -119,4 +89,5 @@ export default class CreateRoomPage extends Component {
     );
   }
 }
- 
+
+export default CreateRoomPage;
